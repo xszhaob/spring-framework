@@ -28,7 +28,9 @@
 	There is also support for lists, sets, maps, and java.util.Properties
 	as bean property types or constructor argument types.
 
+	为了简单的目的，DTD（Document Type Definition：文档类型定义）足够了。从Spring2.0开始，
 	For simple purposes, this DTD is sufficient. As of Spring 2.0,
+	XSD（XML Schemas Definition：XML结构定义）-支持基于bean的定义，是一种更强大的替代方案。
 	XSD-based bean definitions are supported as more powerful alternative.
 
 	XML documents that conform to this DTD should declare the following doctype:
@@ -42,6 +44,12 @@
 	The document root. A document can contain bean definitions only,
 	imports only, or a mixture of both (typically with imports first).
 -->
+<!--
+	<!ELEMENT 元素名称 (元素内容)>
+
+	beans元素可以出现零次或一次description子元素，
+	零次或多次import 、 alias 、 bean元素。
+-->
 <!ELEMENT beans (
 	description?,
 	(import | alias | bean)*
@@ -51,10 +59,17 @@
 	Default values for all bean definitions. Can be overridden at
 	the "bean" level. See those attribute definitions for details.
 -->
+<!--
+<!ATTLIST 元素名称 属性名称 属性类型 默认值>
+-->
 <!ATTLIST beans default-lazy-init (true | false) "false">
 <!ATTLIST beans default-merge (true | false) "false">
 <!ATTLIST beans default-autowire (no | byName | byType | constructor | autodetect) "no">
 <!ATTLIST beans default-dependency-check (none | objects | simple | all) "none">
+<!--
+	CDATA:值为字符数据
+    #IMPLIED:属性不是必需的
+-->
 <!ATTLIST beans default-init-method CDATA #IMPLIED>
 <!ATTLIST beans default-destroy-method CDATA #IMPLIED>
 
@@ -63,6 +78,7 @@
 	element. Always optional.
 	Used primarily for user documentation of XML bean definition documents.
 -->
+<!--只有 PCDATA 的元素通过圆括号中的 #PCDATA 进行声明-->
 <!ELEMENT description (#PCDATA)>
 
 
