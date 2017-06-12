@@ -28,7 +28,9 @@
 	There is also support for lists, sets, maps, and java.util.Properties
 	as bean property types or constructor argument types.
 
+	为了简单的目的，DTD（Document Type Definition：文档类型定义）足够了。从Spring2.0开始，
 	For simple purposes, this DTD is sufficient. As of Spring 2.0,
+	XSD（XML Schemas Definition：XML结构定义）-支持基于bean的定义，是一种更强大的替代方案。
 	XSD-based bean definitions are supported as more powerful alternative.
 
 	XML documents that conform to this DTD should declare the following doctype:
