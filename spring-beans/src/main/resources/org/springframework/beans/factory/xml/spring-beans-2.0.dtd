@@ -78,18 +78,25 @@
 	element. Always optional.
 	Used primarily for user documentation of XML bean definition documents.
 -->
-<!--只有 PCDATA 的元素通过圆括号中的 #PCDATA 进行声明-->
+<!--
+	只有 PCDATA 的元素通过圆括号中的 #PCDATA 进行声明
+	PCDATA 的意思是被解析的字符数据（parsed character data）。
+-->
 <!ELEMENT description (#PCDATA)>
 
 
 <!--
 	Specifies an XML bean definition resource to import.
 -->
+<!--空元素通过类别关键词EMPTY进行声明-->
 <!ELEMENT import EMPTY>
 
 <!--
 	The relative resource location of the XML bean definition file to import,
 	for example "myImport.xml" or "includes/myImport.xml" or "../myImport.xml".
+-->
+<!--
+	import元素需要resource属性，字符类型，必需的
 -->
 <!ATTLIST import resource CDATA #REQUIRED>
 

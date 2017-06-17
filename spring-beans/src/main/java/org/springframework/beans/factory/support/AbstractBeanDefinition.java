@@ -554,9 +554,13 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Set the names of the beans that this bean depends on being initialized.
+	 * bean的初始化需要依赖的bean的集合
 	 * The bean factory will guarantee that these beans get initialized first.
+	 * bean工厂将保证这些依赖的bean先被初始化
 	 * <p>Note that dependencies are normally expressed through bean properties or
+	 * 注意：一般情况下，被依赖的bean通常通过属性或构造器被标识，
 	 * constructor arguments. This property should just be necessary for other kinds
+	 * 这个属性只有在bean启动时需要其他的一些像静态的或数据库准备等依赖时才是必须的。
 	 * of dependencies like statics (*ugh*) or database preparation on startup.
 	 */
 	@Override
