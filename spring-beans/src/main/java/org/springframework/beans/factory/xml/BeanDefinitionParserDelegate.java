@@ -534,20 +534,34 @@ public class BeanDefinitionParserDelegate {
 			if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 				parent = ele.getAttribute(PARENT_ATTRIBUTE);
 			}
+
+			// 创建一个普通的BeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
+			// 解析BeanDefinition中的属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			// BeanDefinition的描述
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			// 解析bean的子元素meta
 			parseMetaElements(ele, bd);
+			// 解析lookup-method子元素
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			// 解析replaced-method子元素
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			// 如果bean的依赖属性有通过构造器注入的，
+			// 需要解析构造器注入的子元素
 			parseConstructorArgElements(ele, bd);
+			// 如果bean的依赖属性有通过属性注入的，
+			// 需要解析属性注入的子元素
 			parsePropertyElements(ele, bd);
+			// 解析限定符
 			parseQualifierElements(ele, bd);
 
+			// 设置bean定义的资源
 			bd.setResource(this.readerContext.getResource());
+			// 什么鬼？有什么用？
 			bd.setSource(extractSource(ele));
 
 			return bd;
@@ -695,12 +709,19 @@ public class BeanDefinitionParserDelegate {
 		NodeList nl = ele.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
+			// 如果元素是meta子元素
 			if (isCandidateElement(node) && nodeNameEquals(node, META_ELEMENT)) {
 				Element metaElement = (Element) node;
+				// key属性的值
 				String key = metaElement.getAttribute(KEY_ATTRIBUTE);
+				// value属性的值
 				String value = metaElement.getAttribute(VALUE_ATTRIBUTE);
+				// BeanMeta数据封装类
 				BeanMetadataAttribute attribute = new BeanMetadataAttribute(key, value);
+				// 提取出source并赋值给BeanMeta数据封装类的source属性
 				attribute.setSource(extractSource(metaElement));
+				// GenericBeanDefinition继承自AbstractBeanDefinition，
+				// 而AbstractBeanDefinition继承了BeanMetadataAttributeAccessor
 				attributeAccessor.addMetadataAttribute(attribute);
 			}
 		}
