@@ -1482,8 +1482,10 @@ public class BeanDefinitionParserDelegate {
 	public BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, BeanDefinition containingBd) {
 
+		// 此节点的名称URI；如果它未被指定，则返回null。
 		String namespaceUri = getNamespaceURI(node);
 		if (!isDefaultNamespace(namespaceUri)) {
+			// 根据命名空间的URI解析命名空间
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 			if (handler != null) {
 				return handler.decorate(node, originalDef, new ParserContext(this.readerContext, this, containingBd));

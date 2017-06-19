@@ -808,13 +808,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		BeanDefinition oldBeanDefinition;
 
+		// 针对该bean的旧的bean定义
 		oldBeanDefinition = this.beanDefinitionMap.get(beanName);
 		if (oldBeanDefinition != null) {
+			// 如果不允许覆盖旧的bean定义，并且旧的bean还存在
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,
 						"Cannot register bean definition [" + beanDefinition + "] for bean '" + beanName +
 						"': There is already [" + oldBeanDefinition + "] bound.");
 			}
+
 			else if (oldBeanDefinition.getRole() < beanDefinition.getRole()) {
 				// e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE
 				if (this.logger.isWarnEnabled()) {
@@ -837,17 +840,25 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
+			// 替换掉旧的bean
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
+					// 把bean定义加入
 					this.beanDefinitionMap.put(beanName, beanDefinition);
+					// 更新的bean
 					List<String> updatedDefinitions = new ArrayList<String>(this.beanDefinitionNames.size() + 1);
+					// 添加原有的bean定义名称
 					updatedDefinitions.addAll(this.beanDefinitionNames);
+					// 加上最新的
 					updatedDefinitions.add(beanName);
+					// 重新赋值给原有的引用
+					// ？为什么要这么做？
 					this.beanDefinitionNames = updatedDefinitions;
+					// 这个是用来做什么的？
 					if (this.manualSingletonNames.contains(beanName)) {
 						Set<String> updatedSingletons = new LinkedHashSet<String>(this.manualSingletonNames);
 						updatedSingletons.remove(beanName);

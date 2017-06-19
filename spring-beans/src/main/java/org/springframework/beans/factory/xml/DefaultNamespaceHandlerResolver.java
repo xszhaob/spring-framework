@@ -105,6 +105,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 
 	/**
 	 * Locate the {@link NamespaceHandler} for the supplied namespace URI
+	 * 定位
 	 * from the configured mappings.
 	 * @param namespaceUri the relevant namespace URI
 	 * @return the located {@link NamespaceHandler}, or {@code null} if none found
