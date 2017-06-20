@@ -39,10 +39,13 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the {@link BeanDefinitionDocumentReader} interface that
+ * BeanDefinitionDocumentReader接口的默认实现，该接口用于读取根据spring-bean
+ * DTD和XSD格式定义的bean
  * reads bean definitions according to the "spring-beans" DTD and XSD format
  * (Spring's default XML bean definition format).
  *
  * <p>The structure, elements, and attribute names of the required XML document
+ * XML文件所需要的结构、元素、属性名被硬编码在类中。
  * are hard-coded in this class. (Of course a transform could be run if necessary
  * to produce this format). {@code <beans>} does not need to be the root
  * element of the XML document: this class will parse all bean definition elements
@@ -305,6 +308,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
+			// 解析默认标签中的自定义标签元素
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.

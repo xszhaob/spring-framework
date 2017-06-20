@@ -1452,6 +1452,9 @@ public class BeanDefinitionParserDelegate {
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 
+	/**
+	 * 如果有需要就对beanDefinition进行装饰
+	 */
 	public BeanDefinitionHolder decorateBeanDefinitionIfRequired(Element ele, BeanDefinitionHolder definitionHolder) {
 		return decorateBeanDefinitionIfRequired(ele, definitionHolder, null);
 	}
@@ -1462,6 +1465,7 @@ public class BeanDefinitionParserDelegate {
 		BeanDefinitionHolder finalDefinition = definitionHolder;
 
 		// Decorate based on custom attributes first.
+		// 遍历所有的属性，看是否有适用于修饰的属性
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
@@ -1469,6 +1473,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		// Decorate based on custom nested elements.
+		// 遍历所有的子节点，看是否有适用于修饰的子元素
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
@@ -1484,6 +1489,7 @@ public class BeanDefinitionParserDelegate {
 
 		// 此节点的名称URI；如果它未被指定，则返回null。
 		String namespaceUri = getNamespaceURI(node);
+		// 对非默认标签进行解析
 		if (!isDefaultNamespace(namespaceUri)) {
 			// 根据命名空间的URI解析命名空间
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
