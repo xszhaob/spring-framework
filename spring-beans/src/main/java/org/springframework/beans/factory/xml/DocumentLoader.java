@@ -23,6 +23,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Strategy interface for loading an XML {@link Document}.
+ * 定义将xml文件转换为Document的方法。
  *
  * @author Rob Harrop
  * @since 2.0
