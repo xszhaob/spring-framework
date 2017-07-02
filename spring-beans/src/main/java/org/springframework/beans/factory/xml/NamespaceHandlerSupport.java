@@ -80,6 +80,10 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 */
 	private BeanDefinitionParser findParserForElement(Element element, ParserContext parserContext) {
 		String localName = parserContext.getDelegate().getLocalName(element);
+		// 从parsers里获取给定元素的解析器，
+		// 在我们自定义的NamespaceHandlerSupport里，
+		// 我们重写init方法，把自定义的handler放入this.parsers里，
+		// 在此时获取parser
 		BeanDefinitionParser parser = this.parsers.get(localName);
 		if (parser == null) {
 			parserContext.getReaderContext().fatal(
@@ -106,7 +110,9 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 */
 	private BeanDefinitionDecorator findDecoratorForNode(Node node, ParserContext parserContext) {
 		BeanDefinitionDecorator decorator = null;
+		// 获取元素名
 		String localName = parserContext.getDelegate().getLocalName(node);
+		//
 		if (node instanceof Element) {
 			decorator = this.decorators.get(localName);
 		}
