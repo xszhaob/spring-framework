@@ -189,6 +189,13 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 	/**
 	 * Determine the raw name, resolving aliases to canonical names.
+	 * 确定原始的bean name，把别名解析成标准的bean name。
+	 * <p/>
+	 * 备注：该方法用于循环查找别名对应的bean name，
+	 * 如果一个bean是非别名的，则本身就是真正的bean，直接返回；
+	 * 如果一个bean是别名，则循环查找真正的bean。
+	 * <p/>
+	 * 这段代码也很精妙。
 	 * @param name the user-specified name
 	 * @return the transformed name
 	 */

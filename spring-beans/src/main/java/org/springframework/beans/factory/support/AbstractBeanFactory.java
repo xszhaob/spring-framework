@@ -197,6 +197,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return doGetBean(name, null, null, false);
 	}
 
+	/**
+	 * 实现BeanFactory中的getBean接口
+	 */
 	@Override
 	public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
 		return doGetBean(name, requiredType, null, false);
@@ -236,6 +239,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			final String name, final Class<T> requiredType, final Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
+		// 解析输入的bean name，得到真正的bean name。
+		// 某些情况下输入的name有可能是FactoryBean的name，或者是别名。
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -1109,9 +1114,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return the bean name, stripping out the factory dereference prefix if necessary,
+	 * 返回bean name，去掉工厂bean的前缀,
 	 * and resolving aliases to canonical names.
-	 * @param name the user-specified name
-	 * @return the transformed bean name
+	 * 并且把别名解析为规范的bean name。
+	 * @param name the user-specified name 用户指定的name
+	 * @return the transformed bean name 转换后的bean name
 	 */
 	protected String transformedBeanName(String name) {
 		return canonicalName(BeanFactoryUtils.transformedBeanName(name));
