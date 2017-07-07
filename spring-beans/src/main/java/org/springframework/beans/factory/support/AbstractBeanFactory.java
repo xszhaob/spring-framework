@@ -244,10 +244,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
+		/*
+		 * 检查缓存中或者实例工厂中是否有对应的实例
+		 * 为什么使用这段代码呢？
+		 * 因为在创建单例bean的时候会存在依赖注入的情况，
+		 * 而在创建依赖的时候为了避免循环依赖，
+		 * Spring创建bean的原则是不等bean创建完成就会将创建bean的
+		 * ObjectFactory提前曝光，也就是将ObjectFactory加入到缓存中，
+		 * 一旦下个bean创建时候需要依赖上个bean，则直接使用ObjectFactory。
+		 */
 		// Eagerly check singleton cache for manually registered singletons.
+		// 直接尝试从缓存获取或者singletonFactories中的ObjectFactory中获取。
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isDebugEnabled()) {
+				// 如果单例bean正在创建中
 				if (isSingletonCurrentlyInCreation(beanName)) {
 					logger.debug("Returning eagerly cached instance of singleton bean '" + beanName +
 							"' that is not fully initialized yet - a consequence of a circular reference");
@@ -256,6 +267,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.debug("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			// 返回对应的实例，有时候存在诸如BeanFactory的情况
+			// 并不是直接返回实例本身而是返回指定方法返回的实例
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 

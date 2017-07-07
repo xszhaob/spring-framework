@@ -84,27 +84,31 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Cache of singleton objects: bean name --> bean instance
-	 * 单例对象的缓存：bean name --> bean 实例
+	 * 用于保存BeanName和创建Bean实例之间的关系：bean name --> bean 实例
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(256);
 
 	/**
 	 * Cache of singleton factories: bean name --> ObjectFactory
-	 * 单例对象工厂的缓存：bean name --> bean 对象工厂
+	 * 用于保存BeanName和创建bean的工厂之间的关系：bean name --> bean 对象工厂
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
 	/**
 	 * Cache of early singleton objects: bean name --> bean instance
-	 * 早期的单例对象缓存： bean name --> bean实例
-	 *
+	 * 保存BeanName和创建bean实例之间的关系，不同于singletonObjects的是，
+	 * 当一个单例bean被放到这里面后，那么当bean还在创建中时，就可以通过getBean方法
+	 * 获取到了，其目的是用来检测循环依赖： bean name --> bean实例
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order */
 	private final Set<String> registeredSingletons = new LinkedHashSet<String>(256);
 
-	/** Names of beans that are currently in creation */
+	/**
+	 * Names of beans that are currently in creation
+	 * 用来保存当前所有已注册的bean
+	 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
 
@@ -204,11 +208,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					// 获取创建bean对象的工厂
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
-						// 获取bean对象
+						// 调用预先设定的geObject方法
 						singletonObject = singletonFactory.getObject();
-						// 记录创建中的bean对象
+						// 记录在缓存中，earlySingletonObjects和singletonFactories互斥
 						this.earlySingletonObjects.put(beanName, singletonObject);
-						// 删除创建bean对象的工厂
 						this.singletonFactories.remove(beanName);
 					}
 				}
