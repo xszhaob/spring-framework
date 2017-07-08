@@ -1215,6 +1215,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return a merged RootBeanDefinition, traversing the parent bean definition
+	 * 返回一个一个合并过的RootBeanDefinition，如果指定的bean是一个子
+	 * bean的话会遍历父bean的相关属性。
 	 * if the specified bean corresponds to a child bean definition.
 	 * @param beanName the name of the bean to retrieve the merged definition for
 	 * @return a (potentially merged) RootBeanDefinition for the given bean
@@ -1234,7 +1236,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return a RootBeanDefinition for the given top-level bean, by merging with
+	 * 为给定的bean返回一个RootBeanDefinition，如果给定的BeanName是子Bean的话
 	 * the parent if the given bean's definition is a child bean definition.
+	 * 会合并父类的相关属性。
 	 * @param beanName the name of the bean definition
 	 * @param bd the original bean definition (Root/ChildBeanDefinition)
 	 * @return a (potentially merged) RootBeanDefinition for the given bean
@@ -1271,8 +1275,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			if (mbd == null) {
+				// 没有父Bean
 				if (bd.getParentName() == null) {
 					// Use copy of given root bean definition.
+					// 拷贝一个RootBeanDefinition，
+					// 最终都是用BeanDefinition的实例拷贝属性
 					if (bd instanceof RootBeanDefinition) {
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
@@ -1284,11 +1291,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// Child bean definition: needs to be merged with parent.
 					BeanDefinition pbd;
 					try {
+						// 获取父类BeanName
 						String parentBeanName = transformedBeanName(bd.getParentName());
+						// 如果当前Bean不是父类Bean，递归获取父类Bean
 						if (!beanName.equals(parentBeanName)) {
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
+							// 获取父Bean的Bean工厂，递归获取父Bean
 							BeanFactory parent = getParentBeanFactory();
 							if (parent instanceof ConfigurableBeanFactory) {
 								pbd = ((ConfigurableBeanFactory) parent).getMergedBeanDefinition(parentBeanName);
@@ -1305,7 +1315,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
+					// 拷贝父类属性
 					mbd = new RootBeanDefinition(pbd);
+					// 如果子Bean中也定义了属性，重写父Bean中属性
 					mbd.overrideFrom(bd);
 				}
 
@@ -1315,6 +1327,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// A bean contained in a non-singleton bean cannot be a singleton itself.
+				// 如果一个单例Bean被包含在非单例Bean中，那么是不能设置自身为单例的。
 				// Let's correct this on the fly here, since this might be the result of
 				// parent-child merging for the outer bean, in which case the original inner bean
 				// definition will not have inherited the merged outer bean's singleton status.
