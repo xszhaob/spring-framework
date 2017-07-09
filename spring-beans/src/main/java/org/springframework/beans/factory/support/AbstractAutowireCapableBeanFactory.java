@@ -414,6 +414,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return result;
 	}
 
+	/**
+	 * 尽可能保证所有bean初始化以后都会调用注册的BeanPOSTProcessor
+	 * 的postProcessAfterInitialization方法进行处理，在实际开发中可以
+	 * 针对此特性设计自己的业务逻辑。
+	 * @param existingBean the new bean instance
+	 * @param beanName the name of the bean
+	 * @return
+	 * @throws BeansException
+	 */
 	@Override
 	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
 			throws BeansException {
