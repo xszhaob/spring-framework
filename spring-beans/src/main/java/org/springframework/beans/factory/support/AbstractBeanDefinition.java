@@ -969,6 +969,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Validate and prepare the method overrides defined for this bean.
 	 * Checks for existence of a method with the specified name.
+	 * 对override属性进行标记及验证
+	 * 在Spring配置中，存在lookup-method和replace-method属性，
+	 * 而这两个配置的加载即使将配置同意存放在BeanDefinition的
+	 * methodOverrides属性里
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {

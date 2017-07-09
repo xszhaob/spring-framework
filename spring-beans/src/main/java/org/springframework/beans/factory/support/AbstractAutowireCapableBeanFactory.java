@@ -469,6 +469,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Prepare method overrides.
+		/*
+		对override属性进行标记及验证
+		在Spring配置中，存在lookup-method和replace-method属性，
+		而这两个配置的加载即使将配置同意存放在BeanDefinition的
+		methodOverrides属性里
+		 */
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
