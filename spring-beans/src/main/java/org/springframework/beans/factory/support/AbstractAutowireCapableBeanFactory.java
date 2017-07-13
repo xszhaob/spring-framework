@@ -1107,6 +1107,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (mbd.getFactoryMethodName() != null)  {
+			// 如果工厂方法不为空，则使用工厂方法初始化策略
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
 
@@ -1117,6 +1118,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			synchronized (mbd.constructorArgumentLock) {
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
+					// 构造函数自动注入
 					autowireNecessary = mbd.constructorArgumentsResolved;
 				}
 			}
@@ -1126,19 +1128,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				return autowireConstructor(beanName, mbd, null, null);
 			}
 			else {
+				// 使用默认构造函数构造
 				return instantiateBean(beanName, mbd);
 			}
 		}
 
 		// Need to determine the constructor...
+		// 根据参数解析构造函数
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null ||
 				mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args))  {
+			// 构造函数自动注入
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 
 		// No special handling: simply use no-arg constructor.
+		// 使用默认构造函数构造
 		return instantiateBean(beanName, mbd);
 	}
 
