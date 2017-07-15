@@ -54,6 +54,7 @@ abstract class AutowireUtils {
 	 * a maximum number of arguments. The result will contain public constructors first,
 	 * with decreasing number of arguments, then non-public constructors, again with
 	 * decreasing number of arguments.
+	 * 多参数public构造方法 > 少参数public构造方法 > 多参数非public方法 > 少参数非public
 	 * @param constructors the constructor array to sort
 	 */
 	public static void sortConstructors(Constructor<?>[] constructors) {
