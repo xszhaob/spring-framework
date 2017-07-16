@@ -20,7 +20,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 
 /**
  * GenericBeanDefinition is a one-stop shop for standard bean definition purposes.
+ * GenericBeanDefinition 是一个针对bean Definition的一站式服务。
  * Like any bean definition, it allows for specifying a class plus optionally
+ * 像任何的BeanDefinition一行，
  * constructor argument values and property values. Additionally, deriving from a
  * parent bean definition can be flexibly configured through the "parentName" property.
  *

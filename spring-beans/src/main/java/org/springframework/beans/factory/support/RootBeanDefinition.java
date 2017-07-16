@@ -30,7 +30,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 
 /**
- * A root bean definition represents the merged bean definition that backs
+ * A root bean definition represents the merged bean definition that backs（支持）
  * a specific bean in a Spring BeanFactory at runtime. It might have been created
  * from multiple original bean definitions that inherit from each other,
  * typically registered as {@link GenericBeanDefinition GenericBeanDefinitions}.
