@@ -1264,7 +1264,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
+		// 给InstantiationAwareBeanPostProcessors机会在属性设置前改变bean。
 		// state of the bean before properties are set. This can be used, for example,
+		// 可以用支持属性注入的类型
 		// to support styles of field injection.
 		boolean continueWithPropertyPopulation = true;
 
@@ -1280,6 +1282,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		// 如果后处理器生效，则停止后续的执行
 		if (!continueWithPropertyPopulation) {
 			return;
 		}
@@ -1289,11 +1292,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 
 			// Add property values based on autowire by name if applicable.
+			// 根据name自动注入
 			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME) {
 				autowireByName(beanName, mbd, bw, newPvs);
 			}
 
 			// Add property values based on autowire by type if applicable.
+			// 根据type自动注入
 			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
 				autowireByType(beanName, mbd, bw, newPvs);
 			}
@@ -1301,8 +1306,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			pvs = newPvs;
 		}
 
+		// 后处理器已经初始化
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
+		// 需要依赖检查
 		boolean needsDepCheck = (mbd.getDependencyCheck() != RootBeanDefinition.DEPENDENCY_CHECK_NONE);
+
 
 		if (hasInstAwareBpps || needsDepCheck) {
 			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
@@ -1328,6 +1336,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Fill in any missing property values with references to
 	 * other beans in this factory if autowire is set to "byName".
+	 * 找出需要根据name注入的bean，然后递归实例化以后注入
 	 * @param beanName the name of the bean we're wiring up.
 	 * Useful for debugging messages; not used functionally.
 	 * @param mbd bean definition to update through autowiring
@@ -1337,6 +1346,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByName(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		// 寻找需要依赖注入的属性
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			if (containsBean(propertyName)) {
@@ -1371,6 +1381,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByType(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		// 自定义的类型转换器
 		TypeConverter converter = getCustomTypeConverter();
 		if (converter == null) {
 			converter = bw;

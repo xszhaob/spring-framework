@@ -57,7 +57,9 @@ import org.springframework.util.StringUtils;
 
 /**
  * Delegate for resolving constructors and factory methods.
+ * 解析构造函数或工厂方法的委托方。
  * Performs constructor resolution through argument matching.
+ * 通过参数匹配来进行构造函数解析。
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -177,6 +179,7 @@ class ConstructorResolver {
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
 			for (Constructor<?> candidate : candidates) {
+				// 参数类型
 				Class<?>[] paramTypes = candidate.getParameterTypes();
 
 				if (constructorToUse != null && argsToUse.length > paramTypes.length) {
@@ -199,7 +202,7 @@ class ConstructorResolver {
 								paramNames = pnd.getParameterNames(candidate);
 							}
 						}
-						// 根据名称和数据类型创建参数持有者
+						// 根据名称和数据类型创建参数持有者，由最初的字符串参数转换为需要的类型参数
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring);
 					}
@@ -224,9 +227,11 @@ class ConstructorResolver {
 					argsHolder = new ArgumentsHolder(explicitArgs);
 				}
 
+
 				int typeDiffWeight = (mbd.isLenientConstructorResolution() ?
 						argsHolder.getTypeDifferenceWeight(paramTypes) : argsHolder.getAssignabilityWeight(paramTypes));
 				// Choose this constructor if it represents the closest match.
+				// 如果匹配度最高，则选择当前的构造函数
 				if (typeDiffWeight < minTypeDiffWeight) {
 					constructorToUse = candidate;
 					argsHolderToUse = argsHolder;
@@ -276,6 +281,9 @@ class ConstructorResolver {
 				beanInstance = AccessController.doPrivileged(new PrivilegedAction<Object>() {
 					@Override
 					public Object run() {
+						/*
+						根据实例化策略以及得到的构造函数及构造函数参数实例化Bean
+						 */
 						return beanFactory.getInstantiationStrategy().instantiate(
 								mbd, beanName, beanFactory, ctorToUse, argumentsToUse);
 					}
